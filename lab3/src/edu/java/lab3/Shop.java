@@ -4,7 +4,7 @@ import java.awt.*;
 import javax.swing.*;
 import javax.swing.table.*;
 import java.awt.event.*;
-//hmmm
+//lol kek???
 /**
  * @author Garifullin Marat
  * @version 1.3
