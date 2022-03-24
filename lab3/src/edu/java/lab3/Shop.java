@@ -1,8 +1,6 @@
 package edu.java.lab3;
 
-import java.awt.BorderLayout;
-import java.awt.FlowLayout;
-import java.awt.Dimension;
+import java.awt.*;
 import javax.swing.*;
 import javax.swing.table.*;
 import java.awt.event.*;
@@ -73,6 +71,7 @@ public class Shop {
 		tableNameContainer = Box.createHorizontalBox();
 		tableNameLabel = new JLabel("Таблица:");
 		tableNameBox = new JComboBox(new String[] { "Продавцы", "Товары" });
+		tableNameLabel.setLabelFor(tableNameBox);
 		tableNameBox.setMaximumSize(new Dimension(90, 25));
 		tableNameContainer.add(tableNameLabel);
 		tableNameContainer.add(Box.createHorizontalStrut(6));
@@ -168,10 +167,9 @@ public class Shop {
 			} else if (event.getSource() == add) {
 				int currentTable = tableNameBox.getSelectedIndex();
 				if (currentTable == 0) {
-					System.out.println("la");
-					SellerWindow s = new SellerWindow();
+					SellerWindow seller = new SellerWindow();
 				} else if (currentTable == 1) {
-
+					ProductWindow product = new ProductWindow();
 				}
 			} else if (event.getSource() == delete) {
 				int currentTable = tableNameBox.getSelectedIndex();
@@ -205,9 +203,13 @@ public class Shop {
 				if (selectedIndex == 0) {
 					sellersScroll.setVisible(true);
 					productsScroll.setVisible(false);
+					tableSearchSellersBox.setVisible(true);
+					tableSearchProductsBox.setVisible(false);
 				} else if (selectedIndex == 1) {
 					sellersScroll.setVisible(false);
 					productsScroll.setVisible(true);
+					tableSearchSellersBox.setVisible(false);
+					tableSearchProductsBox.setVisible(true);
 				}
 				shop.setVisible(true);
 			} else if (event.getSource() == tableSearchSellersBox) {
@@ -224,17 +226,18 @@ public class Shop {
 
 	// ПРОБУЮ СОЗДАТЬ КЛАСС ДЛЯ ДОБАВЛЕНИЯ ПРОДАВЦА
 	public class SellerWindow extends JFrame {
-		Box mainBox, box1, box2, box3;
-		JPanel p;
+		Container mainBox;
+		JPanel panel1, panel2, panel3;
 		JLabel FIOLabel, birthDateLabel, salaryLabel;
 		JTextField FIOField, birthDateField, salaryField;
 		JButton addSeller;
+		SpringLayout layout, layout1, layout2, layout3;
 
 		public SellerWindow() {
-			setTitle("Добавление продавца");
-			setSize(500, 300);
-			setLocation(200, 100);
-			setDefaultCloseOperation(HIDE_ON_CLOSE);
+			this.setTitle("Добавление продавца");
+			this.setBounds(200, 100, 500, 220);
+			this.setDefaultCloseOperation(HIDE_ON_CLOSE);
+			this.setResizable(false);
 
 			// Создание надписей
 			FIOLabel = new JLabel("Введите ФИО:");
@@ -242,41 +245,181 @@ public class Shop {
 			salaryLabel = new JLabel("Введите зарплату:");
 
 			// Создание полей для ввода
-			FIOField = new JTextField(20);
-			birthDateField = new JTextField(20);
+			FIOField = new JTextField();
+			birthDateField = new JTextField();
 			salaryField = new JTextField();
 
 			// Создание кнопки добавления
 			addSeller = new JButton("Добавить");
 
-			// Компановка объектов
-			p = new JPanel(new FlowLayout());
-			p.add(FIOLabel);
-			p.add(FIOField);
-//			box1 = Box.createHorizontalBox();
-//			box1.add(FIOLabel);
-//			box1.add(Box.createHorizontalStrut(16));
-//			box1.add(FIOField);
-			box2 = Box.createHorizontalBox();
-			box2.add(birthDateLabel);
-			box2.add(Box.createHorizontalStrut(16));
-			box2.add(birthDateField);
-			box3 = Box.createHorizontalBox();
-			box3.add(salaryLabel);
-			box3.add(Box.createHorizontalStrut(16));
-			box3.add(salaryField);
-			mainBox = Box.createVerticalBox();
-			mainBox.add(Box.createVerticalGlue());
-			mainBox.add(p);
-			mainBox.add(Box.createVerticalStrut(12));
-			mainBox.add(box2);
-			mainBox.add(box3);
+			//Размещение элементов
+			mainBox = this.getContentPane();
+			layout = new SpringLayout();
+			layout1 = new SpringLayout();
+			layout2 = new SpringLayout();
+			layout3 = new SpringLayout();
+			panel1 = new JPanel();
+			panel2 = new JPanel();
+			panel3 = new JPanel();
+			mainBox.setLayout(layout);
+			panel1.setLayout(layout1);
+			panel2.setLayout(layout2);
+			panel3.setLayout(layout3);
+			panel1.add(FIOLabel);
+			panel1.add(FIOField);
+			panel2.add(birthDateLabel);
+			panel2.add(birthDateField);
+			panel3.add(salaryLabel);
+			panel3.add(salaryField);
+			mainBox.add(panel1);
+			mainBox.add(panel2);
+			mainBox.add(panel3);
 			mainBox.add(addSeller);
-			add(mainBox);
-			setVisible(true);
+			//Размещение panel1
+			layout.putConstraint(SpringLayout.WEST, panel1, 5, SpringLayout.WEST, mainBox);
+			layout.putConstraint(SpringLayout.EAST, panel1, -5, SpringLayout.EAST, mainBox);
+			layout.putConstraint(SpringLayout.NORTH, panel1, 10, SpringLayout.NORTH, mainBox);
+			layout.putConstraint(SpringLayout.SOUTH, panel1, 35, SpringLayout.NORTH, panel1);
+			//Размещение panel2
+			layout.putConstraint(SpringLayout.NORTH, panel2, 10, SpringLayout.SOUTH, panel1);
+			layout.putConstraint(SpringLayout.SOUTH, panel2, 35, SpringLayout.NORTH, panel2);
+			layout.putConstraint(SpringLayout.WEST, panel2, 5, SpringLayout.WEST, mainBox);
+			layout.putConstraint(SpringLayout.EAST, panel2, -5, SpringLayout.EAST, mainBox);
+			//Размещение panel3
+			layout.putConstraint(SpringLayout.NORTH, panel3, 10, SpringLayout.SOUTH, panel2);
+			layout.putConstraint(SpringLayout.SOUTH, panel3, 35, SpringLayout.NORTH, panel3);
+			layout.putConstraint(SpringLayout.WEST, panel3, 5, SpringLayout.WEST, mainBox);
+			layout.putConstraint(SpringLayout.EAST, panel3, -5, SpringLayout.EAST, mainBox);
+			//Размещение кнопки addSeller
+			layout.putConstraint(SpringLayout.EAST, addSeller, -175, SpringLayout.EAST, mainBox);
+			layout.putConstraint(SpringLayout.SOUTH, addSeller, -10, SpringLayout.SOUTH, mainBox);
+			layout.putConstraint(SpringLayout.WEST, addSeller, 175, SpringLayout.WEST, mainBox);
+			//Размещение внутри panel1
+			layout1.putConstraint(SpringLayout.WEST, FIOLabel, 5, SpringLayout.WEST, panel1);
+			layout1.putConstraint(SpringLayout.NORTH, FIOLabel, 5, SpringLayout.NORTH, panel1);
+			layout1.putConstraint(SpringLayout.SOUTH, FIOLabel, -5, SpringLayout.SOUTH, panel1);
+			layout1.putConstraint(SpringLayout.NORTH, FIOField, 5, SpringLayout.NORTH, panel1);
+			layout1.putConstraint(SpringLayout.EAST, FIOField, -30, SpringLayout.EAST, panel1);
+			layout1.putConstraint(SpringLayout.SOUTH, FIOField, -5, SpringLayout.SOUTH, panel1);
+			layout1.putConstraint(SpringLayout.WEST, FIOField, 170, SpringLayout.WEST, panel1);
+			//Размещение внутри panel2
+			layout2.putConstraint(SpringLayout.WEST, birthDateLabel, 5, SpringLayout.WEST, panel2);
+			layout2.putConstraint(SpringLayout.NORTH, birthDateLabel, 5, SpringLayout.NORTH, panel2);
+			layout2.putConstraint(SpringLayout.SOUTH, birthDateLabel, -5, SpringLayout.SOUTH, panel2);
+			layout2.putConstraint(SpringLayout.NORTH, birthDateField, 5, SpringLayout.NORTH, panel2);
+			layout2.putConstraint(SpringLayout.EAST, birthDateField, -30, SpringLayout.EAST, panel2);
+			layout2.putConstraint(SpringLayout.SOUTH, birthDateField, -5, SpringLayout.SOUTH, panel2);
+			layout2.putConstraint(SpringLayout.WEST, birthDateField, 170, SpringLayout.WEST, panel2);
+			//Размещение внутри panel3
+			layout3.putConstraint(SpringLayout.WEST, salaryLabel, 5, SpringLayout.WEST, panel3);
+			layout3.putConstraint(SpringLayout.NORTH, salaryLabel, 5, SpringLayout.NORTH, panel3);
+			layout3.putConstraint(SpringLayout.SOUTH, salaryLabel, -5, SpringLayout.SOUTH, panel3);
+			layout3.putConstraint(SpringLayout.NORTH, salaryField, 5, SpringLayout.NORTH, panel3);
+			layout3.putConstraint(SpringLayout.EAST, salaryField, -30, SpringLayout.EAST, panel3);
+			layout3.putConstraint(SpringLayout.SOUTH, salaryField, -5, SpringLayout.SOUTH, panel3);
+			layout3.putConstraint(SpringLayout.WEST, salaryField, 170, SpringLayout.WEST, panel3);
+			
+			this.setVisible(true);
 		}
 	}
 
+	public class ProductWindow extends JFrame {
+		Container mainBox;
+		JPanel panel1, panel2, panel3;
+		JLabel productNameLabel, priceLabel, numLabel;
+		JTextField productNameField, priceField, numField;
+		JButton addProduct;
+		SpringLayout layout, layout1, layout2, layout3;
+
+		public ProductWindow() {
+			this.setTitle("Добавление товара");
+			this.setBounds(200, 100, 500, 220);
+			this.setDefaultCloseOperation(HIDE_ON_CLOSE);
+			this.setResizable(false);
+
+			// Создание надписей
+			productNameLabel = new JLabel("Введите название:");
+			priceLabel = new JLabel("Введите цену:");
+			numLabel = new JLabel("Введите количество:");
+
+			// Создание полей для ввода
+			productNameField = new JTextField();
+			priceField = new JTextField();
+			numField = new JTextField();
+
+			// Создание кнопки добавления
+			addProduct = new JButton("Добавить");
+
+			//Размещение элементов
+			mainBox = this.getContentPane();
+			layout = new SpringLayout();
+			layout1 = new SpringLayout();
+			layout2 = new SpringLayout();
+			layout3 = new SpringLayout();
+			panel1 = new JPanel();
+			panel2 = new JPanel();
+			panel3 = new JPanel();
+			mainBox.setLayout(layout);
+			panel1.setLayout(layout1);
+			panel2.setLayout(layout2);
+			panel3.setLayout(layout3);
+			panel1.add(productNameLabel);
+			panel1.add(productNameField);
+			panel2.add(priceLabel);
+			panel2.add(priceField);
+			panel3.add(numLabel);
+			panel3.add(numField);
+			mainBox.add(panel1);
+			mainBox.add(panel2);
+			mainBox.add(panel3);
+			mainBox.add(addProduct);
+			//Размещение panel1
+			layout.putConstraint(SpringLayout.WEST, panel1, 5, SpringLayout.WEST, mainBox);
+			layout.putConstraint(SpringLayout.EAST, panel1, -5, SpringLayout.EAST, mainBox);
+			layout.putConstraint(SpringLayout.NORTH, panel1, 10, SpringLayout.NORTH, mainBox);
+			layout.putConstraint(SpringLayout.SOUTH, panel1, 35, SpringLayout.NORTH, panel1);
+			//Размещение panel2
+			layout.putConstraint(SpringLayout.NORTH, panel2, 10, SpringLayout.SOUTH, panel1);
+			layout.putConstraint(SpringLayout.SOUTH, panel2, 35, SpringLayout.NORTH, panel2);
+			layout.putConstraint(SpringLayout.WEST, panel2, 5, SpringLayout.WEST, mainBox);
+			layout.putConstraint(SpringLayout.EAST, panel2, -5, SpringLayout.EAST, mainBox);
+			//Размещение panel3
+			layout.putConstraint(SpringLayout.NORTH, panel3, 10, SpringLayout.SOUTH, panel2);
+			layout.putConstraint(SpringLayout.SOUTH, panel3, 35, SpringLayout.NORTH, panel3);
+			layout.putConstraint(SpringLayout.WEST, panel3, 5, SpringLayout.WEST, mainBox);
+			layout.putConstraint(SpringLayout.EAST, panel3, -5, SpringLayout.EAST, mainBox);
+			//Размещение кнопки addSeller
+			layout.putConstraint(SpringLayout.EAST, addProduct, -175, SpringLayout.EAST, mainBox);
+			layout.putConstraint(SpringLayout.SOUTH, addProduct, -10, SpringLayout.SOUTH, mainBox);
+			layout.putConstraint(SpringLayout.WEST, addProduct, 175, SpringLayout.WEST, mainBox);
+			//Размещение внутри panel1
+			layout1.putConstraint(SpringLayout.WEST, productNameLabel, 5, SpringLayout.WEST, panel1);
+			layout1.putConstraint(SpringLayout.NORTH, productNameLabel, 5, SpringLayout.NORTH, panel1);
+			layout1.putConstraint(SpringLayout.SOUTH, productNameLabel, -5, SpringLayout.SOUTH, panel1);
+			layout1.putConstraint(SpringLayout.NORTH, productNameField, 5, SpringLayout.NORTH, panel1);
+			layout1.putConstraint(SpringLayout.EAST, productNameField, -30, SpringLayout.EAST, panel1);
+			layout1.putConstraint(SpringLayout.SOUTH, productNameField, -5, SpringLayout.SOUTH, panel1);
+			layout1.putConstraint(SpringLayout.WEST, productNameField, 170, SpringLayout.WEST, panel1);
+			//Размещение внутри panel2
+			layout2.putConstraint(SpringLayout.WEST, priceLabel, 5, SpringLayout.WEST, panel2);
+			layout2.putConstraint(SpringLayout.NORTH, priceLabel, 5, SpringLayout.NORTH, panel2);
+			layout2.putConstraint(SpringLayout.SOUTH, priceLabel, -5, SpringLayout.SOUTH, panel2);
+			layout2.putConstraint(SpringLayout.NORTH, priceField, 5, SpringLayout.NORTH, panel2);
+			layout2.putConstraint(SpringLayout.EAST, priceField, -30, SpringLayout.EAST, panel2);
+			layout2.putConstraint(SpringLayout.SOUTH, priceField, -5, SpringLayout.SOUTH, panel2);
+			layout2.putConstraint(SpringLayout.WEST, priceField, 170, SpringLayout.WEST, panel2);
+			//Размещение внутри panel3
+			layout3.putConstraint(SpringLayout.WEST, numLabel, 5, SpringLayout.WEST, panel3);
+			layout3.putConstraint(SpringLayout.NORTH, numLabel, 5, SpringLayout.NORTH, panel3);
+			layout3.putConstraint(SpringLayout.SOUTH, numLabel, -5, SpringLayout.SOUTH, panel3);
+			layout3.putConstraint(SpringLayout.NORTH, numField, 5, SpringLayout.NORTH, panel3);
+			layout3.putConstraint(SpringLayout.EAST, numField, -30, SpringLayout.EAST, panel3);
+			layout3.putConstraint(SpringLayout.SOUTH, numField, -5, SpringLayout.SOUTH, panel3);
+			layout3.putConstraint(SpringLayout.WEST, numField, 170, SpringLayout.WEST, panel3);
+			
+			this.setVisible(true);
+		}
+	}
 	/**
 	 * @param args - вводимая строка
 	 */
