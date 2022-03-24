@@ -4,7 +4,7 @@ import java.awt.*;
 import javax.swing.*;
 import javax.swing.table.*;
 import java.awt.event.*;
-//kek wait
+//hmmm
 /**
  * @author Garifullin Marat
  * @version 1.3
